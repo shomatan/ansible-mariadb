@@ -74,3 +74,14 @@
 
 - name: Remove mariadb test database.
   mysql_db: name=test state=absent
+
+# docker tasks
+- name: run mysqld_safe
+  shell: mysqld_safe > /dev/null 2>&1 &
+         sleep 5
+  when: ansible_connection == 'docker'
+
+- name: Clean the repository
+  shell: yum -y update && \
+         yum clean all
+  when: ansible_connection == 'docker'       
