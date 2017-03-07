@@ -1,6 +1,6 @@
 ---
-mysql_enablerepo: "mariadb"
-mysql_packages:
+mariadb_enablerepo: "mariadb"
+mariadb_packages:
   - mariadb
   - mariadb-server
   - mariadb-devel
