@@ -1,7 +1,8 @@
 Role Name
 =========
 
-A brief description of the role goes here.
+[![Build Status](https://travis-ci.org/shomatan/ansible-mariadb.svg?branch=master)](https://travis-ci.org/shomatan/ansible-mariadb)
+
 
 Requirements
 ------------
