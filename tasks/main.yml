@@ -36,6 +36,11 @@
   service: name=mariadb state=started enabled=yes
   when: ansible_connection != 'docker'
 
+- name: run mysqld_safe
+  shell: mysqld_safe > /dev/null 2>&1 &
+         sleep 5
+  when: ansible_connection == 'docker'
+
 # secure installation
 - name: Get mariadb version.
   command: 'mysql --version'
@@ -76,11 +81,6 @@
   mysql_db: name=test state=absent
 
 # docker tasks
-- name: run mysqld_safe
-  shell: mysqld_safe > /dev/null 2>&1 &
-         sleep 5
-  when: ansible_connection == 'docker'
-
 - name: Clean the repository
   shell: yum -y update && \
          yum clean all
