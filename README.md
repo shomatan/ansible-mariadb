@@ -25,12 +25,18 @@ Example Playbook
 
     - hosts: servers
       roles:
-         - { role: shomatan.mariadb }
+        - { role: shomatan.mariadb }
+      tasks:
+        - name: Run MariaDB backup tasks.
+          include_role:
+            name: shomatan.mariadb
+            tasks_from: backup
+            private: true
 
 License
 -------
 
-BSD, MIT
+MIT
 
 Author Information
 ------------------

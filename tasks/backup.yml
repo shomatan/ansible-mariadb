@@ -1,0 +1,38 @@
+---
+- name: Create backup group.
+  group:
+    name: backup
+
+- name: Create backup user.
+  user:
+    name: backup
+    group: backup
+    shell: /sbin/nologin
+
+- name: Place mysql backup script in place.
+  template:
+    src: backup-mysql.sh.j2
+    dest: /usr/local/bin/backup-mysql
+    mode: 0750
+
+- name: Ensure cron.d directory exists.
+  file:
+    path: /etc/cron.d
+    state: directory
+
+- name: Creates dairy mysql backup cronjob.
+  cron:
+    name: "Backup mysql tables (dairy schedule)"
+    user: root
+    minute: "00"
+    hour: "5"
+    job: "sh /usr/local/bin/backup-mysql"
+    cron_file: mysql-backup
+
+- name: Create backup directory.
+  file:
+    path: /home/backup/mysql
+    owner: backup
+    group: backup
+    mode: 0755
+    state: directory
