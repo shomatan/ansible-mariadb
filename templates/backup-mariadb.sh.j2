@@ -17,7 +17,7 @@ if [ ! -e $BACKDIR ]; then
 fi
 
 # Get database list
-DBLIST=`ls -p {{ mysql_datadir }} | grep / | tr -d /`
+DBLIST=`ls -p {{ mariadb_datadir }} | grep / | tr -d /`
 
 # remove old backup
 DELETE_DAY=`/bin/date -d '7 day ago' +%Y-%m-%d`
