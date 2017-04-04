@@ -9,10 +9,10 @@
     group: backup
     shell: /sbin/nologin
 
-- name: Place mysql backup script in place.
+- name: Place mariadb backup script in place.
   template:
-    src: backup-mysql.sh.j2
-    dest: /usr/local/bin/backup-mysql
+    src: backup-mariadb.sh.j2
+    dest: /usr/local/bin/backup-mariadb
     mode: 0750
 
 - name: Ensure cron.d directory exists.
@@ -20,18 +20,18 @@
     path: /etc/cron.d
     state: directory
 
-- name: Creates dairy mysql backup cronjob.
+- name: Creates dairy mariadb backup cronjob.
   cron:
-    name: "Backup mysql tables (dairy schedule)"
+    name: "Backup mariadb tables (dairy schedule)"
     user: root
     minute: "00"
     hour: "5"
-    job: "sh /usr/local/bin/backup-mysql"
-    cron_file: mysql-backup
+    job: "sh /usr/local/bin/backup-mariadb"
+    cron_file: mariadb-backup
 
 - name: Create backup directory.
   file:
-    path: /home/backup/mysql
+    path: /home/backup/mariadb
     owner: backup
     group: backup
     mode: 0755

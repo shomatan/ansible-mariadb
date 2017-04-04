@@ -1,0 +1,37 @@
+#!/bin/bash
+#
+# Managed by chef
+# -----------------------------------------------------------------------------
+
+PATH=/usr/local/sbin:/usr/bin:/bin
+
+# Backup destination
+BACKDIR=/home/backup/mysql
+
+# MySQL root password
+ROOTPASS={{ mariadb_root_password }}
+
+# Create backup dir
+if [ ! -e $BACKDIR ]; then
+  mkdir -p $BACKDIR
+fi
+
+# Get database list
+DBLIST=`ls -p {{ mysql_datadir }} | grep / | tr -d /`
+
+# remove old backup
+DELETE_DAY=`/bin/date -d '7 day ago' +%Y-%m-%d`
+
+# Take a backup for each database.
+for dbname in $DBLIST
+do
+    [ $dbname = "performance_schema" ] && continue
+    table_count=`mysql -u root -p$ROOTPASS -B -e "show tables" $dbname|wc -l`
+    [ $table_count -ne 0 ] &&
+    mysqldump --events -u root -p$ROOTPASS $dbname > $BACKDIR/$dbname-`date +%Y-%m-%d`.sql | logger -t mysqldump
+
+    # remove old backup
+    rm -f "$BACKDIR/$dbname-$DELETE_DAY.sql"
+done
+
+chown -R backup:backup $BACKDIR
