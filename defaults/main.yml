@@ -6,8 +6,6 @@ mariadb_user_home: /root
 mariadb_root_username: root
 mariadb_root_password: password
 
-mariadb_backup_enabled: true
-
 # -----------------------------------------------------------------------------
 # my.cnf
 # -----------------------------------------------------------------------------
