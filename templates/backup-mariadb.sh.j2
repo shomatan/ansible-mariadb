@@ -20,7 +20,7 @@ fi
 DBLIST=`ls -p {{ mariadb_datadir }} | grep / | tr -d /`
 
 # remove old backup
-DELETE_DAY=`/bin/date -d '7 day ago' +%Y-%m-%d`
+DELETE_DAY=`/bin/date -d '{{ mariadb_backup_generations }} day ago' +%Y-%m-%d`
 
 # Take a backup for each database.
 for dbname in $DBLIST
