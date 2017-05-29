@@ -26,7 +26,7 @@
     host: "{{ item }}"
     password: "{{ mariadb_root_password }}"
     state: present
-  with_items: "{{ mariadb_root_hosts.stdout_lines }}"
+  with_items: "{{ mariadb_root_hosts.stdout_lines | default([]) }}"
 
 # Has to be after the root password assignment, for idempotency.
 - name: Copy .my.cnf file with root password credentials.
@@ -46,7 +46,7 @@
     name: ""
     host: "{{ item }}"
     state: absent
-  with_items: "{{ mariadb_anonymous_hosts.stdout_lines }}"
+  with_items: "{{ mariadb_anonymous_hosts.stdout_lines | default([]) }}"
 
 - name: Remove mariadb test database.
   mysql_db:

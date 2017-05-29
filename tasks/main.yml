@@ -14,7 +14,7 @@
 
 - name: Ensure mariadb packages are installed.
   yum: name={{ item }} state=latest enablerepo={{ mariadb_enablerepo }}
-  with_items: "{{ mariadb_packages }}"
+  with_items: "{{ mariadb_packages | default([]) }}"
   notify: restart mariadb
 
 # configure
