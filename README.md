@@ -12,13 +12,20 @@ None.
 
 Role Variables
 --------------
-
-None.
+See `defaults/main.yml`.
 
 Dependencies
 ------------
 
 None.
+
+Role Tags
+----
+
+- mariadb-repo
+- mariadb-install
+- mariadb-config
+- mariadb-service
 
 Example Playbook
 ----------------
@@ -40,3 +47,5 @@ MIT
 
 Author Information
 ------------------
+
+Shoma Nishitateno

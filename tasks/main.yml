@@ -2,6 +2,8 @@
 # variable setup.
 - name: Include OS-specific variables.
   include_vars: "{{ ansible_os_family }}.yml"
+  tags:
+    - always
 
 # install
 - name: Add mariadb repository.
@@ -11,11 +13,18 @@
     baseurl: http://yum.mariadb.org/{{ mariadb_version }}/centos7-amd64
     gpgcheck: no
     enabled: no
+  tags: 
+    - mariadb-repo
 
 - name: Ensure mariadb packages are installed.
-  yum: name={{ item }} state=latest enablerepo={{ mariadb_enablerepo }}
-  with_items: "{{ mariadb_packages | default([]) }}"
+  yum: 
+    name: "{{ item }}"
+    enablerepo: "{{ mariadb_enablerepo }}"
+    state: latest
+  with_items: "{{ mariadb_packages }}"
   notify: restart mariadb
+  tags:
+    - mariadb-install
 
 # configure
 - name: Copy mariadb configuration file in place.
@@ -23,6 +32,8 @@
     src: my.cnf.j2
     dest: /etc/my.cnf
   notify: restart mariadb
+  tags: 
+    - mariadb-config
 
 - name: Create log dir if it does not exist
   file:
@@ -30,6 +41,8 @@
     owner: mysql
     group: mysql
     state: directory
+  tags: 
+    - mariadb-config
 
 - name: Touch slow query log file.
   copy:
@@ -39,6 +52,8 @@
     group: mysql
     mode: 0640
     force: no
+  tags: 
+    - mariadb-config
 
 - name: Touch error log file.
   copy:
@@ -48,18 +63,16 @@
     group: mysql
     mode: 0640
     force: no
+  tags: 
+    - mariadb-config
 
 # service
 - name: Ensure mariadb is started and enabled to start at boot.
   service: name=mariadb state=started enabled=yes
   when: ansible_connection != 'docker'
+  tags: 
+    - mariadb-service
 
 # secure installation
 - include: init_db.yml
   when: ansible_connection != 'docker'
-
-# docker tasks
-- name: Clean the repository
-  shell: yum -y update && \
-         yum clean all
-  when: ansible_connection == 'docker'
